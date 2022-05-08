@@ -37,10 +37,9 @@ void main() {
   });
 
   test('When failureState apiResponse returned expect null', () async {
-    const mockDrinkEntity = DrinkEntity(id: 'id', name: 'test');
     final fakeCocktailRepo = FakeCocktailRepository(
       fetchCocktailByIdResult: const Right(
-      Failure(message: 'test-failure'),
+        Failure(message: 'test-failure'),
       ),
     );
 

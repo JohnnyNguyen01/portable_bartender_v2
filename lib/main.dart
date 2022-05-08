@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:portable_bartender_v2/data/repositories/cocktail_db_repository_implementation.dart';
+import 'package:portable_bartender_v2/application/individual_drink/individual_drink_screen.dart';
+import 'package:portable_bartender_v2/core/theme/theme.dart';
+import 'package:portable_bartender_v2/core/theme/theme_mode_state.dart';
 import 'package:portable_bartender_v2/domain/models/drink_model.dart';
 
-import 'domain/interactors/drink_interactor.dart';
+import 'domain/interactors/drink_interactor/drink_interactor.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -15,12 +17,13 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(final context, final ref) {
+    final themeModeNotifier = ref.watch(themeModeProvider);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
+      darkTheme: darkTheme,
+      theme: lightTheme,
+      themeMode: themeModeNotifier.themeMode,
+      home: const IndividualDrinkScreen(),
     );
   }
 }
@@ -55,14 +58,9 @@ class HomePage extends HookConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final cocktail = await drinkInteractor.fetchDrinkById<DrinkInfoModel>(id:'11000');
-          print(cocktail);
+          final cocktail =
+              await drinkInteractor.fetchDrinkById<DrinkInfoModel>(id: '11000');
           cocktailName.value = cocktail?.name ?? '';
-          // final cocktail = await cocktailRepo.fetchCocktailById(id: '11000');
-          // cocktail.leftMap(
-          //   (apiResponse) =>
-          //      cocktailName.value = apiResponse.payload?['drinks'][0]['strDrink'],
-          // );
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
